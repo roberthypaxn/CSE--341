@@ -1,7 +1,7 @@
 const mongodb = require("../db/connect");
 const ObjectId = require("mongodb").ObjectId;
 
-const getAll = async (req, res, next) => {
+const getAll = async (req, res) => {
   const result = await mongodb.getDb().collection("contacts").find();
   result.toArray().then((lists) => {
     res.setHeader("Content-Type", "application/json");
@@ -9,8 +9,14 @@ const getAll = async (req, res, next) => {
   });
 };
 
-const getSingle = async (req, res, next) => {
-  const userId = new ObjectId(req.params.id);
+const getSingle = async (req, res) => {
+  const id = req.params.id;
+
+  if (!ObjectId.isValid(id)) {
+    console.log("Kaput!");
+    return res.status(400).json({ message: "Invalid contact ID." });
+  }
+  const userId = new ObjectId(id);
   const result = await mongodb
     .getDb()
     .collection("contacts")

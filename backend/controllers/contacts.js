@@ -17,7 +17,9 @@ const getSingle = async (req, res) => {
   const id = req.params.id;
 
   if (!ObjectId.isValid(id)) {
-    console.log("Kaput!");
+    console.log(
+      "The getSingle was run without a valid single id, even for '/'!"
+    );
     return res.status(400).json({ message: "Invalid contact ID." });
   }
   const userId = new ObjectId(id);

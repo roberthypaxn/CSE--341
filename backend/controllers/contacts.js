@@ -2,6 +2,7 @@ const mongodb = require("../db/connect");
 const ObjectId = require("mongodb").ObjectId;
 
 const getAll = async (req, res) => {
+  //#swagger.tags=["Contacts"]
   const result = await mongodb.getDb().collection("contacts").find();
   result.toArray().then((lists) => {
     res.setHeader("Content-Type", "application/json");
@@ -10,6 +11,7 @@ const getAll = async (req, res) => {
 };
 
 const getSingle = async (req, res) => {
+  //#swagger.tags=["Contacts"]
   const id = req.params.id;
 
   if (!ObjectId.isValid(id)) {
@@ -30,6 +32,7 @@ const getSingle = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
+  //#swagger.tags=["Contacts"]
   const user = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -47,6 +50,7 @@ const createUser = async (req, res) => {
   }
 };
 const updateUser = async (req, res) => {
+  //#swagger.tags=["Contacts"]
   const userId = new ObjectId(req.params.id);
   const user = {
     firstName: req.body.firstName,
@@ -69,19 +73,24 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
+  //#swagger.tags=["Contacts"]
   const userId = new ObjectId(req.params.id);
+
+  const id = req.params.id;
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid ID format" });
+  }
+
   const response = await mongodb
     .getDb()
     .collection("contacts")
     .deleteOne({ _id: userId });
-  if (response.deleteCount > 0) {
+  if (response.deletedCount > 0) {
     res.status(204).send();
-  } else if (!ObjectId.isValid(userId)) {
+  } else {
     res
       .status(500)
       .json(response.error || "An error occurred while deleting the user");
-  } else {
-    res.status(500).json(response.error || "useId issue again!");
   }
 };
 module.exports = { getAll, getSingle, createUser, updateUser, deleteUser };

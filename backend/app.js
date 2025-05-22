@@ -13,7 +13,7 @@ const port = process.env.PORT || 8080;
 // The xpress() function is called... this returns an instance of an express application and is stored in the app variable
 const app = xpress();
 
-app.use(bodyParser.json()).use(cors()).use("/", require("./routes/contacts"));
+app.use(bodyParser.json()).use(cors()).use("/", require("./routes"));
 
 mongodb.initDb((err, mongodb) => {
   if (err) {

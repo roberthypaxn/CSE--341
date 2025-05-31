@@ -1,10 +1,10 @@
-const swaggerAutogenFn = require("swagger-autogen");
-const swaggerAutogen = swaggerAutogenFn();
+const swaggerAuto = require("swagger-autogen");
+const swaggerAutogen = swaggerAuto();
 
 const doc = {
   info: {
-    title: "Users API",
-    description: "Users API",
+    title: "Contacts API",
+    description: "Contacts API",
   },
   host: "localhost:8080",
   schemes: ["http", "https"],

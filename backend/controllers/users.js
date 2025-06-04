@@ -1,0 +1,112 @@
+const mongodb = require("../db/connect");
+const ObjectId = require("mongodb").ObjectId;
+
+const getAllUsers = async (req, res) => {
+  //#swagger.tags=["Users"]
+  const result = await mongodb.getDb().collection("users").find();
+  result.toArray().then((lists) => {
+    res.setHeader("Content-Type", "application/json");
+    res.status(200).json(lists);
+  });
+};
+
+const getSingleUser = async (req, res) => {
+  //#swagger.tags=["Users"]
+  const id = req.params.id;
+
+  if (!ObjectId.isValid(id)) {
+    console.log("getSingle() ran!");
+    return res.status(400).json({ message: "Invalid User ID." });
+  }
+  const UserId = new ObjectId(id);
+  const result = await mongodb
+    .getDb()
+    .collection("users")
+    .findOne({ _id: UserId });
+  if (result) {
+    res.setHeader("Content-Type", "application/json");
+    res.status(200).json(result);
+  } else {
+    res.status(404).json({ message: "User not found." });
+  }
+};
+
+const createUser = async (req, res) => {
+  //#swagger.tags=["Users"]
+  const user = {
+    username: req.body.username,
+    email: req.body.email,
+    passwordHash: req.body.passwordHash, // Stored securely, never raw
+    displayName: req.body.displayName,
+    bio: req.body.bio,
+    favoriteGenres: req.body.favoriteGenres, // Expect an array (e.g. ["sci-fi", "comedy"])
+    avatarImageUrl: req.body.avatarImageUrl,
+    location: req.body.location,
+    joinedDate: req.body.joinedDate, // ISO string or Date object
+    isCritic: req.body.isCritic, // Boolean: true if verified critic
+  };
+  const response = await mongodb.getDb().collection("users").insertOne(user);
+  if (response.acknowledged > 0) {
+    res.status(204).send();
+  } else {
+    res
+      .status(500)
+      .json(response.error || "An error occurred while creating the User");
+  }
+};
+const updateUser = async (req, res) => {
+  //#swagger.tags=["Users"]
+  const UserId = new ObjectId(req.params.id);
+  const user = {
+    username: req.body.username,
+    email: req.body.email,
+    passwordHash: req.body.passwordHash, // Stored securely, never raw
+    displayName: req.body.displayName,
+    bio: req.body.bio,
+    favoriteGenres: req.body.favoriteGenres, // Expect an array (e.g. ["sci-fi", "comedy"])
+    avatarImageUrl: req.body.avatarImageUrl,
+    location: req.body.location,
+    joinedDate: req.body.joinedDate, // ISO string or Date object
+    isCritic: req.body.isCritic, // Boolean: true if verified critic
+  };
+  const response = await mongodb
+    .getDb()
+    .collection("users")
+    .replaceOne({ _id: UserId }, user);
+  if (response.modifiedCount > 0) {
+    res.status(204).send();
+  } else {
+    res
+      .status(500)
+      .json(response.error || "An error occurred while updating the User");
+  }
+};
+
+const deleteUser = async (req, res) => {
+  //#swagger.tags=["Users"]
+  const UserId = new ObjectId(req.params.id);
+
+  const id = req.params.id;
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid ID format" });
+  }
+
+  const response = await mongodb
+    .getDb()
+    .collection("users")
+    .deleteOne({ _id: UserId });
+  if (response.deletedCount > 0) {
+    res.status(204).send();
+  } else {
+    res
+      .status(500)
+      .json(response.error || "An error occurred while deleting the User");
+  }
+};
+module.exports = {
+  getAllUsers,
+  getSingleUser,
+  createUser,
+  updateUser,
+  deleteUser,
+};

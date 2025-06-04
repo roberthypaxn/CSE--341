@@ -2,7 +2,7 @@ const mongodb = require("../db/connect");
 const ObjectId = require("mongodb").ObjectId;
 
 const getAllMovies = async (req, res) => {
-  //#swagger.tags=["movies"]
+  //#swagger.tags=["Movies"]
   const result = await mongodb.getDb().collection("movies").find();
   result.toArray().then((lists) => {
     res.setHeader("Content-Type", "application/json");
@@ -11,7 +11,7 @@ const getAllMovies = async (req, res) => {
 };
 
 const getSingleMovie = async (req, res) => {
-  //#swagger.tags=["movies"]
+  //#swagger.tags=["Movies"]
   const id = req.params.id;
 
   if (!ObjectId.isValid(id)) {
@@ -32,7 +32,7 @@ const getSingleMovie = async (req, res) => {
 };
 
 const createMovie = async (req, res) => {
-  //#swagger.tags=["movies"]
+  //#swagger.tags=["Movies"]
   const movie = {
     title: req.body.title,
     director: req.body.director,
@@ -51,7 +51,7 @@ const createMovie = async (req, res) => {
   }
 };
 const updateMovie = async (req, res) => {
-  //#swagger.tags=["movies"]
+  //#swagger.tags=["Movies"]
   const movieId = new ObjectId(req.params.id);
   const movie = {
     title: req.body.title,
@@ -75,7 +75,7 @@ const updateMovie = async (req, res) => {
 };
 
 const deleteMovie = async (req, res) => {
-  //#swagger.tags=["movies"]
+  //#swagger.tags=["Movies"]
   const movieId = new ObjectId(req.params.id);
 
   const id = req.params.id;

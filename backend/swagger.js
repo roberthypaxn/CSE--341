@@ -3,11 +3,11 @@ const swaggerAutogen = swaggerAuto();
 
 const doc = {
   info: {
-    title: "Contacts API",
-    description: "Contacts API",
+    title: "Movie Reviews API",
+    description: "Movie Reviews API",
   },
-  host: "cse-341-w02-e31k.onrender.com",
-  schemes: ["https", "http"],
+  host: "localhost:8080",
+  schemes: ["http", "https"],
 };
 
 const outputFile = "./swagger.json";

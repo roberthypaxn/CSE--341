@@ -2,7 +2,8 @@ const xpress = require("express");
 const router = xpress.Router();
 
 router.use("/", require("./swagger"));
-router.use("/contacts", require("./contacts"));
+router.use("/movies", require("./movies"));
+router.use("/reviews", require("./reviews"));
 
 router.get("/", function (req, res) {
   //#swagger.tags=["Hello world"]

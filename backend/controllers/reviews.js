@@ -33,6 +33,22 @@ const getSingleReview = async (req, res) => {
 
 const createReview = async (req, res) => {
   //#swagger.tags=["Reviews"]
+
+  // Manual validation
+  if (
+    !req.body.movie_id ||
+    !ObjectId.isValid(req.body.movie_id) ||
+    !req.body.user_id ||
+    !ObjectId.isValid(req.body.user_id) ||
+    typeof req.body.stars !== "number" ||
+    req.body.stars < 1 ||
+    req.body.stars > 5 ||
+    typeof req.body.review !== "string" ||
+    req.body.review.trim() === ""
+  ) {
+    return res.status(400).json({ error: "Invalid input for review" });
+  }
+
   const review = {
     movie_id: req.body.movie_id,
     user_id: req.body.user_id,
@@ -45,7 +61,7 @@ const createReview = async (req, res) => {
     .collection("reviews")
     .insertOne(review);
   if (response.acknowledged > 0) {
-    res.status(204).send();
+    res.status(201).json(review);
   } else {
     res
       .status(500)
@@ -55,6 +71,22 @@ const createReview = async (req, res) => {
 const updateReview = async (req, res) => {
   //#swagger.tags=["Reviews"]
   const reviewId = new ObjectId(req.params.id);
+
+  // Manual validation
+  if (
+    !req.body.movie_id ||
+    !ObjectId.isValid(req.body.movie_id) ||
+    !req.body.user_id ||
+    !ObjectId.isValid(req.body.user_id) ||
+    typeof req.body.stars !== "number" ||
+    req.body.stars < 1 ||
+    req.body.stars > 5 ||
+    typeof req.body.review !== "string" ||
+    req.body.review.trim() === ""
+  ) {
+    return res.status(400).json({ error: "Invalid input for review" });
+  }
+
   const review = {
     movie_id: req.body.movie_id,
     user_id: req.body.user_id,
@@ -67,7 +99,7 @@ const updateReview = async (req, res) => {
     .collection("reviews")
     .replaceOne({ _id: reviewId }, review);
   if (response.modifiedCount > 0) {
-    res.status(204).send();
+    res.status(200).json(review);
   } else {
     res
       .status(500)

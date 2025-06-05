@@ -33,6 +33,28 @@ const getSingleMovie = async (req, res) => {
 
 const createMovie = async (req, res) => {
   //#swagger.tags=["Movies"]
+
+  //Manual Validation
+  if (
+    typeof req.body.title !== "string" ||
+    req.body.title.trim() === "" ||
+    typeof req.body.director !== "string" ||
+    req.body.director.trim() === "" ||
+    typeof req.body.release_year !== "number" ||
+    req.body.release_year < 1880 ||
+    req.body.release_year > new Date().getFullYear() + 1 ||
+    !Array.isArray(req.body.genre) ||
+    req.body.genre.length === 0 ||
+    !req.body.genre.every((g) => typeof g === "string") ||
+    (req.body.tags &&
+      (!Array.isArray(req.body.tags) ||
+        !req.body.tags.every((t) => typeof t === "string"))) ||
+    typeof req.body.description !== "string" ||
+    req.body.description.trim() === ""
+  ) {
+    return res.status(400).json({ error: "Invalid input for movie" });
+  }
+
   const movie = {
     title: req.body.title,
     director: req.body.director,
@@ -43,7 +65,7 @@ const createMovie = async (req, res) => {
   };
   const response = await mongodb.getDb().collection("movies").insertOne(movie);
   if (response.acknowledged > 0) {
-    res.status(204).send();
+    res.status(201).json(movie);
   } else {
     res
       .status(500)
@@ -53,6 +75,29 @@ const createMovie = async (req, res) => {
 const updateMovie = async (req, res) => {
   //#swagger.tags=["Movies"]
   const movieId = new ObjectId(req.params.id);
+
+  //Manual Validation
+
+  if (
+    typeof req.body.title !== "string" ||
+    req.body.title.trim() === "" ||
+    typeof req.body.director !== "string" ||
+    req.body.director.trim() === "" ||
+    typeof req.body.release_year !== "number" ||
+    req.body.release_year < 1880 ||
+    req.body.release_year > new Date().getFullYear() + 1 ||
+    !Array.isArray(req.body.genre) ||
+    req.body.genre.length === 0 ||
+    !req.body.genre.every((g) => typeof g === "string") ||
+    (req.body.tags &&
+      (!Array.isArray(req.body.tags) ||
+        !req.body.tags.every((t) => typeof t === "string"))) ||
+    typeof req.body.description !== "string" ||
+    req.body.description.trim() === ""
+  ) {
+    return res.status(400).json({ error: "Invalid input for movie" });
+  }
+
   const movie = {
     title: req.body.title,
     director: req.body.director,
@@ -66,7 +111,7 @@ const updateMovie = async (req, res) => {
     .collection("movies")
     .replaceOne({ _id: movieId }, movie);
   if (response.modifiedCount > 0) {
-    res.status(204).send();
+    res.status(200).json(movie);
   } else {
     res
       .status(500)

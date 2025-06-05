@@ -33,6 +33,21 @@ const getSingleUser = async (req, res) => {
 
 const createUser = async (req, res) => {
   //#swagger.tags=["Users"]
+
+  // Manual validation
+  if (
+    !req.body.username ||
+    !req.body.email ||
+    !req.body.passwordHash ||
+    !req.body.displayName ||
+    !Array.isArray(req.body.favoriteGenres) ||
+    typeof req.body.isCritic !== "boolean"
+  ) {
+    return res.status(400).json({
+      error: "Invalid input. Required fields are missing or incorrect.",
+    });
+  }
+
   const user = {
     username: req.body.username,
     email: req.body.email,
@@ -47,7 +62,7 @@ const createUser = async (req, res) => {
   };
   const response = await mongodb.getDb().collection("users").insertOne(user);
   if (response.acknowledged > 0) {
-    res.status(204).send();
+    res.status(201).json(user);
   } else {
     res
       .status(500)
@@ -57,6 +72,21 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   //#swagger.tags=["Users"]
   const UserId = new ObjectId(req.params.id);
+
+  // Validate input BEFORE using req.body
+  if (
+    !req.body.username ||
+    !req.body.email ||
+    !req.body.passwordHash ||
+    !req.body.displayName ||
+    !Array.isArray(req.body.favoriteGenres) ||
+    typeof req.body.isCritic !== "boolean"
+  ) {
+    return res.status(400).json({
+      error: "Invalid input. Required fields are missing or incorrect.",
+    });
+  }
+
   const user = {
     username: req.body.username,
     email: req.body.email,
@@ -74,7 +104,7 @@ const updateUser = async (req, res) => {
     .collection("users")
     .replaceOne({ _id: UserId }, user);
   if (response.modifiedCount > 0) {
-    res.status(204).send();
+    res.status(200).json(user);
   } else {
     res
       .status(500)

@@ -6,7 +6,7 @@ const doc = {
     title: "Movie Reviews API",
     description: "Movie Reviews API",
   },
-  host: "cse-341-1-3t67.onrender.com",
+  host: "cse-341-w03-ei9o.onrender.com",
   schemes: ["https", "http"],
 };
 

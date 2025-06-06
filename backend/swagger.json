@@ -5,11 +5,11 @@
     "description": "Movie Reviews API",
     "version": "1.0.0"
   },
-  "host": "localhost:8080",
+  "host": "https://cse-341-1-3t67.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http",
-    "https"
+    "https",
+    "http"
   ],
   "paths": {
     "/": {

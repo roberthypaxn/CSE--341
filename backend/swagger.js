@@ -6,8 +6,8 @@ const doc = {
     title: "Movie Reviews API",
     description: "Movie Reviews API",
   },
-  host: "localhost:8080",
-  schemes: ["http", "https"],
+  host: "https://cse-341-1-3t67.onrender.com",
+  schemes: ["https", "http"],
 };
 
 const outputFile = "./swagger.json";

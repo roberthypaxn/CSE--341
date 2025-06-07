@@ -1,16 +1,16 @@
 const xpress = require("express");
 const router = xpress.Router();
 
-const contactsController = require("../controllers/movies");
+const moviesController = require("../controllers/movies");
 
-router.get("/", contactsController.getAllMovies);
+router.get("/", moviesController.getAllMovies);
 
-router.get("/:id", contactsController.getSingleMovie);
+router.get("/:id", moviesController.getSingleMovie);
 
-router.post("/", contactsController.createMovie);
+router.post("/", moviesController.createMovie);
 
-router.put("/:id", contactsController.updateMovie);
+router.put("/:id", moviesController.updateMovie);
 
-router.delete("/:id", contactsController.deleteMovie);
+router.delete("/:id", moviesController.deleteMovie);
 
 module.exports = router;

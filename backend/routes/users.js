@@ -1,16 +1,16 @@
 const xpress = require("express");
 const router = xpress.Router();
 
-const contactsController = require("../controllers/users");
+const usersController = require("../controllers/users");
 
-router.get("/", contactsController.getAllUsers);
+router.get("/", usersController.getAllUsers);
 
-router.get("/:id", contactsController.getSingleUser);
+router.get("/:id", usersController.getSingleUser);
 
-router.post("/", contactsController.createUser);
+router.post("/", usersController.createUser);
 
-router.put("/:id", contactsController.updateUser);
+router.put("/:id", usersController.updateUser);
 
-router.delete("/:id", contactsController.deleteUser);
+router.delete("/:id", usersController.deleteUser);
 
 module.exports = router;

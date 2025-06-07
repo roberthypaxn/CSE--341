@@ -1,16 +1,16 @@
 const xpress = require("express");
 const router = xpress.Router();
 
-const contactsController = require("../controllers/reviews");
+const reviewsController = require("../controllers/reviews");
 
-router.get("/", contactsController.getAllReviews);
+router.get("/", reviewsController.getAllReviews);
 
-router.get("/:id", contactsController.getSingleReview);
+router.get("/:id", reviewsController.getSingleReview);
 
-router.post("/", contactsController.createReview);
+router.post("/", reviewsController.createReview);
 
-router.put("/:id", contactsController.updateReview);
+router.put("/:id", reviewsController.updateReview);
 
-router.delete("/:id", contactsController.deleteReview);
+router.delete("/:id", reviewsController.deleteReview);
 
 module.exports = router;

@@ -19,7 +19,7 @@ const app = xpress();
 
 app
   .use(bodyParser.json())
-  .use(session({ secret: "secret", resave: false, saveUninitialized: true }))
+  .use(session({ secret: "secret", resave: false, saveUninitialized: true })) //Using default MemoryStore (not recommended for production)
   //Express session initialization
   .use(passport.initialize())
   //Initiate passport on every route call.
@@ -38,7 +38,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: process.env.CALLBACK_URL,
+      callbackURL: process.env.CALLBACK_URL, //Set to https://cse-341-w04.onrender.com/github/callback in Render
     },
     function (accessToken, refreshToken, profile, done) {
       //User.findOrCreate({githubId:profile.id},function (err,user){
@@ -58,21 +58,20 @@ passport.deserializeUser(function (user, done) {
 app.get("/", function (req, res) {
   res.send(
     req.session.user !== undefined
-      ? `Logged in as ${req.session.user.displayName}`
-      : "Logged out"
+      ? `Welcome back, ${req.session.user.displayName}! You're now logged in.`
+      : "You've logged out. See you next time!"
   );
 });
+
 app.get(
   "/github/callback",
-  passport.authenticate("github", {
-    failureRedirect: "/api-docs",
-    session: false,
-  }),
+  passport.authenticate("github", { failureRedirect: "/api-docs" }), //Removed session: false
   function (req, res) {
     req.session.user = req.user;
     res.redirect("/");
   }
 );
+
 mongodb.initDb((err) => {
   if (err) {
     console.log(err);

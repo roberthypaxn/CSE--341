@@ -65,7 +65,10 @@ app.get("/", function (req, res) {
 
 app.get(
   "/github/callback",
-  passport.authenticate("github", { failureRedirect: "/api-docs" }), //Removed session: false
+  passport.authenticate("github", {
+    failureRedirect: "/api-docs",
+    session: false,
+  }), //Removed session: false
   function (req, res) {
     req.session.user = req.user;
     res.redirect("/");

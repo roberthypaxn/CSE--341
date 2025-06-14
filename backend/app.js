@@ -10,6 +10,8 @@ const passport = require("passport");
 const cors = require("cors");
 //Express Session
 const session = require("express-session");
+//MongoDB Session Store
+const MongoDBStore = require("connect-mongodb-session")(session);
 //Github Strategy
 const GithubStrategy = require("passport-github2").Strategy;
 
@@ -17,9 +19,26 @@ const port = process.env.PORT || 8080;
 // The xpress() function is called... this returns an instance of an express application and is stored in the app variable
 const app = xpress();
 
+//Configure MongoDB session store
+const store = new MongoDBStore({
+  uri: process.env.MONGODB_URI, //Uses same MONGODB_URI as /db/connect.js
+  collection: "sessions",
+});
+store.on("error", function (error) {
+  console.error("Session store error:", error);
+});
+
 app
   .use(bodyParser.json())
-  .use(session({ secret: "secret", resave: false, saveUninitialized: true })) //Using default MemoryStore (not recommended for production)
+  .use(
+    session({
+      secret: "secret",
+      resave: false,
+      saveUninitialized: true,
+      store: store,
+    })
+  ) //Using MongoDB session store to prevent memory leak
+
   //Express session initialization
   .use(passport.initialize())
   //Initiate passport on every route call.
@@ -68,7 +87,7 @@ app.get(
   passport.authenticate("github", {
     failureRedirect: "/api-docs",
     session: false,
-  }), //Removed session: false
+  }),
   function (req, res) {
     req.session.user = req.user;
     res.redirect("/");

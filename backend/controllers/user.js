@@ -21,6 +21,7 @@ const getSingle = async (req, res) => {
     const id = req.params.id;
 
     if (!ObjectId.isValid(id)) {
+      console.log("getSingle() ran!");
       return res.status(400).json({ message: "Invalid user ID." });
     }
     const userId = new ObjectId(id);
@@ -42,18 +43,15 @@ const getSingle = async (req, res) => {
 const createUser = async (req, res) => {
   //#swagger.tags=["Users"]
   try {
-    //Manual Validation
+    //Validation
     if (
       typeof req.body.name !== "string" ||
       req.body.name.trim() === "" ||
       typeof req.body.email !== "string" ||
-      req.body.email.trim() === "" ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email) ||
       (req.body.phoneNumber !== undefined &&
         typeof req.body.phoneNumber !== "string") ||
-      (req.body.reservations !== undefined &&
-        (!Array.isArray(req.body.reservations) ||
-          !req.body.reservations.every((r) => typeof r === "object"))) ||
+      !Array.isArray(req.body.reservations) ||
       (req.body.createdAt !== undefined &&
         isNaN(Date.parse(req.body.createdAt)))
     ) {
@@ -93,32 +91,27 @@ const updateUser = async (req, res) => {
   //#swagger.tags=["Users"]
   try {
     const id = req.params.id;
-
-    if (!ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "Invalid user ID." });
-    }
-    //Manual Validation
     if (
       typeof req.body.name !== "string" ||
       req.body.name.trim() === "" ||
       typeof req.body.email !== "string" ||
-      req.body.email.trim() === "" ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email) ||
       (req.body.phoneNumber !== undefined &&
         typeof req.body.phoneNumber !== "string") ||
-      (req.body.reservations !== undefined &&
-        (!Array.isArray(req.body.reservations) ||
-          !req.body.reservations.every((r) => typeof r === "object"))) ||
+      !Array.isArray(req.body.reservations) ||
       (req.body.createdAt !== undefined &&
         isNaN(Date.parse(req.body.createdAt)))
     ) {
       return res.status(400).json({ error: "Invalid input for user" });
     }
 
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid user ID." });
+    }
+
     const userId = new ObjectId(id);
 
     const user = {
-      githubId: req.body.githubId, // String: GitHub ID (same as in reservation)
       name: req.body.name, // String: User's name
       email: req.body.email, // String: User's email address
       phoneNumber: req.body.phoneNumber, // String: Optional phone number

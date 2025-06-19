@@ -98,9 +98,6 @@
     },
     "/cars/{id}": {
       "get": {
-        "tags": [
-          "Cars"
-        ],
         "description": "",
         "produces": [
           "application/json"
@@ -271,6 +268,9 @@
                 },
                 "transactionId": {
                   "example": "any"
+                },
+                "status": {
+                  "example": "any"
                 }
               }
             }
@@ -358,6 +358,9 @@
                   "example": "any"
                 },
                 "transactionId": {
+                  "example": "any"
+                },
+                "status": {
                   "example": "any"
                 }
               }
@@ -463,6 +466,9 @@
                   "example": "any"
                 },
                 "insuranceSelected": {
+                  "example": "any"
+                },
+                "status": {
                   "example": "any"
                 }
               }
@@ -636,6 +642,32 @@
         "produces": [
           "application/json"
         ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "phoneNumber": {
+                  "example": "any"
+                },
+                "reservations": {
+                  "example": "any"
+                },
+                "createdAt": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -698,6 +730,30 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "phoneNumber": {
+                  "example": "any"
+                },
+                "reservations": {
+                  "example": "any"
+                },
+                "createdAt": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {

@@ -1,1 +1,6 @@
-Robert Hypax NDIRAMIYE: Created CRUD operations and documentation
+Robert Hypax NDIRAMIYE:
+    * Created CRUD operation
+    * Added documentation
+    * Added Validation
+    * Added Authentication
+    * Added Test with Jest

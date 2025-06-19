@@ -44,28 +44,28 @@ const createUser = async (req, res) => {
   try {
     //Manual Validation
     if (
-      typeof req.user.name !== "string" ||
-      req.user.name.trim() === "" ||
-      typeof req.user.email !== "string" ||
-      req.user.email.trim() === "" ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.user.email) ||
-      (req.user.phoneNumber !== undefined &&
-        typeof req.user.phoneNumber !== "string") ||
-      (req.user.reservations !== undefined &&
-        (!Array.isArray(req.user.reservations) ||
-          !req.user.reservations.every((r) => typeof r === "object"))) ||
-      (req.user.createdAt !== undefined &&
-        isNaN(Date.parse(req.user.createdAt)))
+      typeof req.body.name !== "string" ||
+      req.body.name.trim() === "" ||
+      typeof req.body.email !== "string" ||
+      req.body.email.trim() === "" ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email) ||
+      (req.body.phoneNumber !== undefined &&
+        typeof req.body.phoneNumber !== "string") ||
+      (req.body.reservations !== undefined &&
+        (!Array.isArray(req.body.reservations) ||
+          !req.body.reservations.every((r) => typeof r === "object"))) ||
+      (req.body.createdAt !== undefined &&
+        isNaN(Date.parse(req.body.createdAt)))
     ) {
       return res.status(400).json({ error: "Invalid input for user" });
     }
 
     const user = {
-      name: req.user.name, // String: User's name
-      email: req.user.email, // String: User's email address
-      phoneNumber: req.user.phoneNumber, // String: Optional phone number
-      reservations: req.user.reservations, // Array: List of reservations by this user
-      createdAt: req.user.createdAt || new Date(), // Date: Account creation time
+      name: req.body.name, // String: User's name
+      email: req.body.email, // String: User's email address
+      phoneNumber: req.body.phoneNumber, // String: Optional phone number
+      reservations: req.body.reservations, // Array: List of reservations by this user
+      createdAt: req.body.createdAt || new Date(), // Date: Account creation time
     };
 
     const response = await mongodb.getDb().collection("users").insertOne(user);
@@ -99,18 +99,18 @@ const updateUser = async (req, res) => {
     }
     //Manual Validation
     if (
-      typeof req.user.name !== "string" ||
-      req.user.name.trim() === "" ||
-      typeof req.user.email !== "string" ||
-      req.user.email.trim() === "" ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.user.email) ||
-      (req.user.phoneNumber !== undefined &&
-        typeof req.user.phoneNumber !== "string") ||
-      (req.user.reservations !== undefined &&
-        (!Array.isArray(req.user.reservations) ||
-          !req.user.reservations.every((r) => typeof r === "object"))) ||
-      (req.user.createdAt !== undefined &&
-        isNaN(Date.parse(req.user.createdAt)))
+      typeof req.body.name !== "string" ||
+      req.body.name.trim() === "" ||
+      typeof req.body.email !== "string" ||
+      req.body.email.trim() === "" ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email) ||
+      (req.body.phoneNumber !== undefined &&
+        typeof req.body.phoneNumber !== "string") ||
+      (req.body.reservations !== undefined &&
+        (!Array.isArray(req.body.reservations) ||
+          !req.body.reservations.every((r) => typeof r === "object"))) ||
+      (req.body.createdAt !== undefined &&
+        isNaN(Date.parse(req.body.createdAt)))
     ) {
       return res.status(400).json({ error: "Invalid input for user" });
     }
@@ -118,12 +118,12 @@ const updateUser = async (req, res) => {
     const userId = new ObjectId(id);
 
     const user = {
-      githubId: req.user.githubId, // String: GitHub ID (same as in reservation)
-      name: req.user.name, // String: User's name
-      email: req.user.email, // String: User's email address
-      phoneNumber: req.user.phoneNumber, // String: Optional phone number
-      reservations: req.user.reservations, // Array: List of reservations by this user
-      createdAt: req.user.createdAt || new Date(), // Date: Account creation time
+      githubId: req.body.githubId, // String: GitHub ID (same as in reservation)
+      name: req.body.name, // String: User's name
+      email: req.body.email, // String: User's email address
+      phoneNumber: req.body.phoneNumber, // String: Optional phone number
+      reservations: req.body.reservations, // Array: List of reservations by this user
+      createdAt: req.body.createdAt || new Date(), // Date: Account creation time
     };
 
     const response = await mongodb

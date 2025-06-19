@@ -62,19 +62,25 @@
             "schema": {
               "type": "object",
               "properties": {
-                "firstName": {
+                "make": {
                   "example": "any"
                 },
-                "lastName": {
+                "model": {
                   "example": "any"
                 },
-                "email": {
+                "year": {
                   "example": "any"
                 },
-                "favoriteColor": {
+                "color": {
                   "example": "any"
                 },
-                "birthday": {
+                "licensePlate": {
+                  "example": "any"
+                },
+                "mileage": {
+                  "example": "any"
+                },
+                "location": {
                   "example": "any"
                 }
               }
@@ -138,19 +144,25 @@
             "schema": {
               "type": "object",
               "properties": {
-                "firstName": {
+                "make": {
                   "example": "any"
                 },
-                "lastName": {
+                "model": {
                   "example": "any"
                 },
-                "email": {
+                "year": {
                   "example": "any"
                 },
-                "favoriteColor": {
+                "color": {
                   "example": "any"
                 },
-                "birthday": {
+                "licensePlate": {
+                  "example": "any"
+                },
+                "mileage": {
+                  "example": "any"
+                },
+                "location": {
                   "example": "any"
                 }
               }
@@ -219,19 +231,19 @@
             "schema": {
               "type": "object",
               "properties": {
-                "firstName": {
+                "reservationId": {
                   "example": "any"
                 },
-                "lastName": {
+                "amount": {
                   "example": "any"
                 },
-                "email": {
+                "method": {
                   "example": "any"
                 },
-                "favoriteColor": {
+                "paidAt": {
                   "example": "any"
                 },
-                "birthday": {
+                "transactionId": {
                   "example": "any"
                 }
               }
@@ -295,19 +307,19 @@
             "schema": {
               "type": "object",
               "properties": {
-                "firstName": {
+                "reservationId": {
                   "example": "any"
                 },
-                "lastName": {
+                "amount": {
                   "example": "any"
                 },
-                "email": {
+                "method": {
                   "example": "any"
                 },
-                "favoriteColor": {
+                "paidAt": {
                   "example": "any"
                 },
-                "birthday": {
+                "transactionId": {
                   "example": "any"
                 }
               }

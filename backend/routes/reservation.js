@@ -1,5 +1,6 @@
 const xpress = require("express");
 const router = xpress.Router();
+const { isAuthenticated } = require("../middleware/auth");
 
 const reservationController = require("../controllers/reservation");
 
@@ -7,10 +8,10 @@ router.get("/", reservationController.getAllReservations);
 
 router.get("/:id", reservationController.getSingle);
 
-router.post("/", reservationController.createReservation);
+router.post("/", isAuthenticated, reservationController.createReservation);
 
-router.put("/:id", reservationController.updateReservation);
+router.put("/:id", isAuthenticated, reservationController.updateReservation);
 
-router.delete("/:id", reservationController.deleteReservation);
+router.delete("/:id", isAuthenticated, reservationController.deleteReservation);
 
 module.exports = router;

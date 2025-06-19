@@ -34,12 +34,15 @@ const getSingle = async (req, res) => {
 const createPayment = async (req, res) => {
   //#swagger.tags=["Payments"]
   const payment = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    favoriteColor: req.body.favoriteColor,
-    birthday: req.body.birthday,
+    userId: req.user.githubId, // String: ID of the paying user
+    reservationId: req.body.reservationId, // String: Associated reservation
+    amount: req.body.amount, // Number: Total amount paid
+    method: req.body.method, // String: Payment method (e.g., 'credit_card', 'paypal')
+    status: "pending", // String: Payment status ('pending', 'completed', etc.)
+    paidAt: req.body.paidAt || null, // Date: When payment was made (if applicable)
+    transactionId: req.body.transactionId, // String: Reference ID from payment gateway
   };
+
   const response = await mongodb
     .getDb()
     .collection("payments")
@@ -56,12 +59,15 @@ const updatePayment = async (req, res) => {
   //#swagger.tags=["Payments"]
   const paymentId = new ObjectId(req.params.id);
   const payment = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    favoriteColor: req.body.favoriteColor,
-    birthday: req.body.birthday,
+    userId: req.user.githubId, // String: ID of the paying user
+    reservationId: req.body.reservationId, // String: Associated reservation
+    amount: req.body.amount, // Number: Total amount paid
+    method: req.body.method, // String: Payment method (e.g., 'credit_card', 'paypal')
+    status: "pending", // String: Payment status ('pending', 'completed', etc.)
+    paidAt: req.body.paidAt || null, // Date: When payment was made (if applicable)
+    transactionId: req.body.transactionId, // String: Reference ID from payment gateway
   };
+
   const response = await mongodb
     .getDb()
     .collection("payments")

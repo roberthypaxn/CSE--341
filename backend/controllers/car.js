@@ -34,12 +34,16 @@ const getSingle = async (req, res) => {
 const createCar = async (req, res) => {
   //#swagger.tags=["Cars"]
   const car = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    favoriteColor: req.body.favoriteColor,
-    birthday: req.body.birthday,
+    make: req.body.make, // String: Car manufacturer
+    model: req.body.model, // String: Car model
+    year: req.body.year, // Number: Year the car was made
+    color: req.body.color, // String: Car color
+    licensePlate: req.body.licensePlate, // String: License plate number
+    mileage: req.body.mileage, // Number: Current mileage
+    location: req.body.location, // String: Where the car is stored
+    isAvailable: true, // Boolean: Availability status
   };
+
   const response = await mongodb.getDb().collection("cars").insertOne(car);
   if (response.acknowledged > 0) {
     res.status(204).send();
@@ -53,12 +57,16 @@ const updateCar = async (req, res) => {
   //#swagger.tags=["Cars"]
   const carId = new ObjectId(req.params.id);
   const car = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    favoriteColor: req.body.favoriteColor,
-    birthday: req.body.birthday,
+    make: req.body.make, // String: Car manufacturer
+    model: req.body.model, // String: Car model
+    year: req.body.year, // Number: Year the car was made
+    color: req.body.color, // String: Car color
+    licensePlate: req.body.licensePlate, // String: License plate number
+    mileage: req.body.mileage, // Number: Current mileage
+    location: req.body.location, // String: Where the car is stored
+    isAvailable: true, // Boolean: Availability status
   };
+
   const response = await mongodb
     .getDb()
     .collection("cars")

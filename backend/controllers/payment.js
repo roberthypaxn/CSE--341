@@ -21,7 +21,6 @@ const getSingle = async (req, res) => {
     const id = req.params.id;
 
     if (!ObjectId.isValid(id)) {
-      console.log("getSingle() ran!");
       return res.status(400).json({ message: "Invalid payment ID." });
     }
     const paymentId = new ObjectId(id);
@@ -45,8 +44,6 @@ const createPayment = async (req, res) => {
   try {
     //Manual Validation
     if (
-      typeof req.user.githubId !== "string" ||
-      req.user.githubId.trim() === "" ||
       typeof req.body.reservationId !== "string" ||
       req.body.reservationId.trim() === "" ||
       typeof req.body.amount !== "number" ||
@@ -61,11 +58,10 @@ const createPayment = async (req, res) => {
     }
 
     const payment = {
-      userId: req.user.githubId, // String: ID of the paying user
       reservationId: req.body.reservationId, // String: Associated reservation
       amount: req.body.amount, // Number: Total amount paid
       method: req.body.method, // String: Payment method (e.g., 'credit_card', 'paypal')
-      status: "pending", // String: Payment status ('pending', 'completed', etc.)
+      status: req.body.status, // String: Payment status ('pending', 'completed', etc.)
       paidAt: req.body.paidAt || null, // Date: When payment was made (if applicable)
       transactionId: req.body.transactionId, // String: Reference ID from payment gateway
     };
@@ -105,8 +101,6 @@ const updatePayment = async (req, res) => {
 
     //Manual Validation
     if (
-      typeof req.user.githubId !== "string" ||
-      req.user.githubId.trim() === "" ||
       typeof req.body.reservationId !== "string" ||
       req.body.reservationId.trim() === "" ||
       typeof req.body.amount !== "number" ||
@@ -123,11 +117,10 @@ const updatePayment = async (req, res) => {
     const paymentId = new ObjectId(id);
 
     const payment = {
-      userId: req.user.githubId, // String: ID of the paying user
       reservationId: req.body.reservationId, // String: Associated reservation
       amount: req.body.amount, // Number: Total amount paid
       method: req.body.method, // String: Payment method (e.g., 'credit_card', 'paypal')
-      status: "pending", // String: Payment status ('pending', 'completed', etc.)
+      status: req.body.status, // String: Payment status ('pending', 'completed', etc.)
       paidAt: req.body.paidAt || null, // Date: When payment was made (if applicable)
       transactionId: req.body.transactionId, // String: Reference ID from payment gateway
     };

@@ -1,122 +1,136 @@
-const request = require("supertest");
-const { app, server } = require("../app"); // Assumes server export for open handles fix
-const ObjectId = require("mongodb").ObjectId;
+const { getAllCars } = require("../controllers/car");
 const mongodb = require("../db/connect");
 
-// Mock the MongoDB module
 jest.mock("../db/connect");
 
-describe("Car API", () => {
-  let mockDb;
-  let mockCollection;
+describe("getAllCars", () => {
+  it("responds with a list of cars", async () => {
+    const mockCars = [{ name: "Toyota" }, { name: "Honda" }];
+    const mockToArray = jest.fn().mockResolvedValue(mockCars);
+    const mockFind = jest.fn().mockReturnValue({ toArray: mockToArray });
 
-  beforeAll(() => {
-    // Mock the database and collection
-    mockCollection = {
-      find: jest.fn().mockReturnThis(),
-      toArray: jest.fn(),
-      findOne: jest.fn(),
+    mongodb.getDb.mockReturnValue({
+      collection: jest.fn().mockReturnValue({
+        find: mockFind,
+      }),
+    });
+
+    const req = {};
+    const res = {
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
     };
-    mockDb = {
-      collection: jest.fn().mockReturnValue(mockCollection),
+
+    await getAllCars(req, res);
+
+    expect(res.setHeader).toHaveBeenCalledWith(
+      "Content-Type",
+      "application/json"
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockCars);
+  });
+
+  it("handles errors and sends 500", async () => {
+    const error = new Error("DB failure");
+    mongodb.getDb.mockImplementation(() => {
+      throw error;
+    });
+
+    const req = {};
+    const res = {
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
     };
-    mongodb.getDb.mockReturnValue(mockDb);
+
+    await getAllCars(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: error.message });
+  });
+});
+
+const { getSingle } = require("../controllers/car");
+const { ObjectId } = require("mongodb");
+
+describe("getSingle", () => {
+  it("returns 400 for invalid ObjectId", async () => {
+    const req = { params: { id: "invalid-id" } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await getSingle(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: "Invalid car ID." });
   });
 
-  beforeEach(() => {
-    // Clear mocks before each test
-    jest.clearAllMocks();
-  });
+  it("returns 200 with car data when found", async () => {
+    const fakeCar = { _id: new ObjectId(), name: "Nissan" };
+    const req = { params: { id: fakeCar._id.toHexString() } };
+    const res = {
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
 
-  afterAll(() => {
-    jest.resetAllMocks();
-    if (server) server.close(); // Close server to fix open handles
-  });
-
-  it("GET /cars → returns all cars", async () => {
-    const mockCars = [
-      { _id: "1", make: "Toyota", model: "Camry", year: 2020 },
-      { _id: "2", make: "Honda", model: "Civic", year: 2019 },
-    ];
-    mockCollection.toArray.mockResolvedValue(mockCars);
-
-    const res = await request(app).get("/cars");
-
-    expect(res.statusCode).toBe(200);
-    expect(res.headers["content-type"]).toMatch(/application\/json/);
-    expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body).toEqual(mockCars);
-    expect(mockDb.collection).toHaveBeenCalledWith("cars");
-    expect(mockCollection.find).toHaveBeenCalled();
-    expect(mockCollection.toArray).toHaveBeenCalled();
-  });
-
-  it("GET /cars → handles database error", async () => {
-    jest.spyOn(console, "error").mockImplementation(() => {}); // Suppress console.error
-    mockCollection.toArray.mockRejectedValue(new Error("Database error"));
-    const res = await request(app).get("/cars");
-    expect(res.statusCode).toBe(500);
-    expect(res.body).toEqual({ error: "Database error" });
-    jest.spyOn(console, "error").mockRestore();
-  });
-
-  describe("GET /cars/:id", () => {
-    it("returns a single car for a valid ID", async () => {
-      const validId = new ObjectId().toString();
-      const mockCar = {
-        _id: validId,
-        make: "Toyota",
-        model: "Camry",
-        year: 2020,
-      };
-      mockCollection.findOne.mockResolvedValue(mockCar);
-
-      const res = await request(app).get(`/cars/${validId}`);
-
-      expect(res.statusCode).toBe(200);
-      expect(res.headers["content-type"]).toMatch(/application\/json/);
-      expect(res.body).toEqual(mockCar);
-      expect(mockDb.collection).toHaveBeenCalledWith("cars");
-      expect(mockCollection.findOne).toHaveBeenCalledWith({
-        _id: expect.any(ObjectId),
-      });
+    mongodb.getDb.mockReturnValue({
+      collection: () => ({
+        findOne: jest.fn().mockResolvedValue(fakeCar),
+      }),
     });
 
-    it("returns 400 for an invalid ID", async () => {
-      const invalidId = "abc";
-      const res = await request(app).get(`/cars/${invalidId}`);
-      expect(res.statusCode).toBe(400);
-      expect(res.body).toEqual({ message: "Invalid car ID." });
-      expect(mockCollection.findOne).not.toHaveBeenCalled();
+    await getSingle(req, res);
+
+    expect(res.setHeader).toHaveBeenCalledWith(
+      "Content-Type",
+      "application/json"
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(fakeCar);
+  });
+
+  it("returns 404 when car not found", async () => {
+    const id = new ObjectId().toHexString();
+    const req = { params: { id } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    mongodb.getDb.mockReturnValue({
+      collection: () => ({
+        findOne: jest.fn().mockResolvedValue(null),
+      }),
     });
 
-    it("returns 404 when car is not found", async () => {
-      const validId = new ObjectId().toString();
-      mockCollection.findOne.mockResolvedValue(null);
+    await getSingle(req, res);
 
-      const res = await request(app).get(`/cars/${validId}`);
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ message: "Car not found." });
+  });
 
-      expect(res.statusCode).toBe(404);
-      expect(res.body).toEqual({ message: "Car not found." });
-      expect(mockDb.collection).toHaveBeenCalledWith("cars");
-      expect(mockCollection.findOne).toHaveBeenCalledWith({
-        _id: expect.any(ObjectId),
-      });
+  it("handles database errors with 500", async () => {
+    const id = new ObjectId().toHexString();
+    const req = { params: { id } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    mongodb.getDb.mockReturnValue({
+      collection: () => ({
+        findOne: jest.fn().mockRejectedValue(new Error("DB fail")),
+      }),
     });
 
-    it("returns 500 on database error", async () => {
-      const validId = new ObjectId().toString();
-      const dbError = new Error("Database error");
-      mockCollection.findOne.mockRejectedValue(dbError);
+    await getSingle(req, res);
 
-      const res = await request(app).get(`/cars/${validId}`);
-
-      expect(res.statusCode).toBe(500);
-      expect(res.body).toEqual({ error: "Database error" });
-      expect(mockDb.collection).toHaveBeenCalledWith("cars");
-      expect(mockCollection.findOne).toHaveBeenCalledWith({
-        _id: expect.any(ObjectId),
-      });
-    });
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: "DB fail" });
   });
 });

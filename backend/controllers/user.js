@@ -21,7 +21,6 @@ const getSingle = async (req, res) => {
     const id = req.params.id;
 
     if (!ObjectId.isValid(id)) {
-      console.log("getSingle() ran!");
       return res.status(400).json({ message: "Invalid user ID." });
     }
     const userId = new ObjectId(id);
@@ -45,8 +44,6 @@ const createUser = async (req, res) => {
   try {
     //Manual Validation
     if (
-      typeof req.user.githubId !== "string" ||
-      req.user.githubId.trim() === "" ||
       typeof req.user.name !== "string" ||
       req.user.name.trim() === "" ||
       typeof req.user.email !== "string" ||
@@ -64,7 +61,6 @@ const createUser = async (req, res) => {
     }
 
     const user = {
-      githubId: req.user.githubId, // String: GitHub ID (same as in reservation)
       name: req.user.name, // String: User's name
       email: req.user.email, // String: User's email address
       phoneNumber: req.user.phoneNumber, // String: Optional phone number
@@ -103,8 +99,6 @@ const updateUser = async (req, res) => {
     }
     //Manual Validation
     if (
-      typeof req.user.githubId !== "string" ||
-      req.user.githubId.trim() === "" ||
       typeof req.user.name !== "string" ||
       req.user.name.trim() === "" ||
       typeof req.user.email !== "string" ||

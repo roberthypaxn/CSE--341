@@ -9,7 +9,6 @@ const getAllReservations = async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     res.status(200).json(lists);
   } catch (err) {
-    console.error("Error in getAllReservations:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -21,7 +20,6 @@ const getSingle = async (req, res) => {
     const id = req.params.id;
 
     if (!ObjectId.isValid(id)) {
-      console.log("getSingle() ran!");
       return res.status(400).json({ message: "Invalid reservation ID." });
     }
     const reservationId = new ObjectId(id);
@@ -45,8 +43,6 @@ const createReservation = async (req, res) => {
   try {
     //Manual Validation
     if (
-      typeof req.user.githubId !== "string" ||
-      req.user.githubId.trim() === "" ||
       typeof req.body.carId !== "string" ||
       req.body.carId.trim() === "" ||
       isNaN(Date.parse(req.body.startDate)) ||
@@ -62,14 +58,13 @@ const createReservation = async (req, res) => {
     }
 
     const reservation = {
-      userId: req.user.githubId, // String: GitHub ID from session
       carId: req.body.carId, // String: ID of the rented car
       startDate: req.body.startDate, // Date: Rental start date
       endDate: req.body.endDate, // Date: Rental end date
       totalCost: req.body.totalCost, // Number: Total rental cost
       pickupLocation: req.body.pickupLocation, // String: Where to pick up the car
       insuranceSelected: req.body.insuranceSelected, // Boolean: Whether insurance is added
-      status: "pending", // String: Reservation status (default: pending)
+      status: req.body.status, // String: Reservation status (default: pending)
       createdAt: new Date(), // Date: Timestamp of reservation creation
     };
 
@@ -107,8 +102,6 @@ const updateReservation = async (req, res) => {
     }
     //Manual Validation
     if (
-      typeof req.user.githubId !== "string" ||
-      req.user.githubId.trim() === "" ||
       typeof req.body.carId !== "string" ||
       req.body.carId.trim() === "" ||
       isNaN(Date.parse(req.body.startDate)) ||
@@ -126,7 +119,6 @@ const updateReservation = async (req, res) => {
     const reservationId = new ObjectId(id);
 
     const reservation = {
-      userId: req.user.githubId, // String: GitHub ID from session
       carId: req.body.carId, // String: ID of the rented car
       startDate: req.body.startDate, // Date: Rental start date
       endDate: req.body.endDate, // Date: Rental end date

@@ -9,7 +9,6 @@ const getAllCars = async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     res.status(200).json(lists);
   } catch (err) {
-    console.error("Error in getAllCars:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -17,9 +16,7 @@ const getAllCars = async (req, res) => {
 const getSingle = async (req, res) => {
   try {
     const id = req.params.id;
-    //console.log("getSingle received id:", id); // Debug
     if (!ObjectId.isValid(id)) {
-      //console.log("getSingle() ran! Invalid ID:", id); // Moved here
       return res.status(400).json({ message: "Invalid car ID." });
     }
     const carId = new ObjectId(id);

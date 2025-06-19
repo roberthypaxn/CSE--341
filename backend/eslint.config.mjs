@@ -5,7 +5,11 @@ import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
-  { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
+  {
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node, ...globals.jest },
+    },
+  },
   pluginJs.configs.recommended,
   eslintPluginPrettier,
   {

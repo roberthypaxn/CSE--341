@@ -15,13 +15,11 @@ const getAllCars = async (req, res) => {
 };
 
 const getSingle = async (req, res) => {
-  //#swagger.tags=["Cars"]
-
   try {
     const id = req.params.id;
-
+    //console.log("getSingle received id:", id); // Debug
     if (!ObjectId.isValid(id)) {
-      console.log("getSingle() ran!");
+      //console.log("getSingle() ran! Invalid ID:", id); // Moved here
       return res.status(400).json({ message: "Invalid car ID." });
     }
     const carId = new ObjectId(id);

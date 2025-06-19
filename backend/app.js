@@ -105,3 +105,4 @@ mongodb.initDb((err) => {
     });
   }
 });
+module.exports = app; //Export the app for testing with Jest

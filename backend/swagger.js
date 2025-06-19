@@ -6,8 +6,8 @@ const doc = {
     title: "Car Rental API",
     description: "Car Rental API",
   },
-  host: "localhost:8080",
-  schemes: ["http", "https"],
+  host: "https://cse-341-1-q96r.onrender.com",
+  schemes: ["https", "http"],
 };
 
 const outputFile = "./swagger.json";

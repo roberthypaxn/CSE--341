@@ -5,11 +5,11 @@
     "description": "Car Rental API",
     "version": "1.0.0"
   },
-  "host": "localhost:8080",
+  "host": "https://cse-341-1-q96r.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http",
-    "https"
+    "https",
+    "http"
   ],
   "paths": {
     "/api-docs": {

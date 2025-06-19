@@ -3,7 +3,7 @@ const router = xpress.Router();
 
 const carController = require("../controllers/car");
 
-router.get("/", carController.getAll);
+router.get("/", carController.getAllCars);
 
 router.get("/:id", carController.getSingle);
 

@@ -1,104 +1,152 @@
 const mongodb = require("../db/connect");
 const ObjectId = require("mongodb").ObjectId;
 
-const getAll = async (req, res) => {
+const getAllCars = async (req, res) => {
   //#swagger.tags=["Cars"]
-  const result = await mongodb.getDb().collection("cars").find();
-  result.toArray().then((lists) => {
+  try {
+    const result = await mongodb.getDb().collection("cars").find();
+    const lists = await result.toArray();
     res.setHeader("Content-Type", "application/json");
     res.status(200).json(lists);
-  });
+  } catch (err) {
+    console.error("Error in getAllCars:", err);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 const getSingle = async (req, res) => {
   //#swagger.tags=["Cars"]
-  const id = req.params.id;
 
-  if (!ObjectId.isValid(id)) {
-    console.log("getSingle() ran!");
-    return res.status(400).json({ message: "Invalid car ID." });
-  }
-  const carId = new ObjectId(id);
-  const result = await mongodb
-    .getDb()
-    .collection("cars")
-    .findOne({ _id: carId });
-  if (result) {
-    res.setHeader("Content-Type", "application/json");
-    res.status(200).json(result);
-  } else {
-    res.status(404).json({ message: "Car not found." });
+  try {
+    const id = req.params.id;
+
+    if (!ObjectId.isValid(id)) {
+      console.log("getSingle() ran!");
+      return res.status(400).json({ message: "Invalid car ID." });
+    }
+    const carId = new ObjectId(id);
+    const result = await mongodb
+      .getDb()
+      .collection("cars")
+      .findOne({ _id: carId });
+    if (result) {
+      res.setHeader("Content-Type", "application/json");
+      res.status(200).json(result);
+    } else {
+      res.status(404).json({ message: "Car not found." });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
 const createCar = async (req, res) => {
   //#swagger.tags=["Cars"]
-  const car = {
-    make: req.body.make, // String: Car manufacturer
-    model: req.body.model, // String: Car model
-    year: req.body.year, // Number: Year the car was made
-    color: req.body.color, // String: Car color
-    licensePlate: req.body.licensePlate, // String: License plate number
-    mileage: req.body.mileage, // Number: Current mileage
-    location: req.body.location, // String: Where the car is stored
-    isAvailable: true, // Boolean: Availability status
-  };
+  try {
+    const car = {
+      make: req.body.make, // String: Car manufacturer
+      model: req.body.model, // String: Car model
+      year: req.body.year, // Number: Year the car was made
+      color: req.body.color, // String: Car color
+      licensePlate: req.body.licensePlate, // String: License plate number
+      mileage: req.body.mileage, // Number: Current mileage
+      location: req.body.location, // String: Where the car is stored
+      isAvailable: true, // Boolean: Availability status
+    };
 
-  const response = await mongodb.getDb().collection("cars").insertOne(car);
-  if (response.acknowledged > 0) {
-    res.status(204).send();
-  } else {
-    res
-      .status(500)
-      .json(response.error || "An error occurred while creating the car");
+    const response = await mongodb.getDb().collection("cars").insertOne(car);
+
+    if (response.acknowledged) {
+      res.status(201).json({ message: "Car created", id: response.insertedId });
+    } else {
+      res.setHeader("Content-Type", "application/json");
+      res.status(400).json(
+        response.error || {
+          message: "An error occurred while creating the car",
+        }
+      );
+    }
+  } catch (err) {
+    console.error("Error in createCar:", err);
+    res.setHeader("Content-Type", "application/json");
+    res.status(500).json({ error: err.message });
   }
 };
+
 const updateCar = async (req, res) => {
   //#swagger.tags=["Cars"]
-  const carId = new ObjectId(req.params.id);
-  const car = {
-    make: req.body.make, // String: Car manufacturer
-    model: req.body.model, // String: Car model
-    year: req.body.year, // Number: Year the car was made
-    color: req.body.color, // String: Car color
-    licensePlate: req.body.licensePlate, // String: License plate number
-    mileage: req.body.mileage, // Number: Current mileage
-    location: req.body.location, // String: Where the car is stored
-    isAvailable: true, // Boolean: Availability status
-  };
+  try {
+    const id = req.params.id;
 
-  const response = await mongodb
-    .getDb()
-    .collection("cars")
-    .replaceOne({ _id: carId }, car);
-  if (response.modifiedCount > 0) {
-    res.status(204).send();
-  } else {
-    res
-      .status(500)
-      .json(response.error || "An error occurred while updating the car");
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid car ID." });
+    }
+
+    const carId = new ObjectId(id);
+
+    const car = {
+      make: req.body.make, // String: Car manufacturer
+      model: req.body.model, // String: Car model
+      year: req.body.year, // Number: Year the car was made
+      color: req.body.color, // String: Car color
+      licensePlate: req.body.licensePlate, // String: License plate number
+      mileage: req.body.mileage, // Number: Current mileage
+      location: req.body.location, // String: Where the car is stored
+      isAvailable: true, // Boolean: Availability status
+    };
+
+    const response = await mongodb
+      .getDb()
+      .collection("cars")
+      .replaceOne({ _id: carId }, car);
+
+    if (response.modifiedCount > 0) {
+      res.status(200).send(); // OK, updated
+    } else {
+      res.setHeader("Content-Type", "application/json");
+      res.status(400).json(
+        response.error || {
+          message: "An error occurred while updating the car",
+        }
+      );
+    }
+  } catch (err) {
+    console.error("Error in updateCar:", err);
+    res.setHeader("Content-Type", "application/json");
+    res.status(500).json({ error: err.message });
   }
 };
 
 const deleteCar = async (req, res) => {
   //#swagger.tags=["Cars"]
-  const carId = new ObjectId(req.params.id);
+  try {
+    const id = req.params.id;
 
-  const id = req.params.id;
-  if (!ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid ID format" });
-  }
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
 
-  const response = await mongodb
-    .getDb()
-    .collection("cars")
-    .deleteOne({ _id: carId });
-  if (response.deletedCount > 0) {
-    res.status(204).send();
-  } else {
-    res
-      .status(500)
-      .json(response.error || "An error occurred while deleting the car");
+    const carId = new ObjectId(id);
+    const response = await mongodb
+      .getDb()
+      .collection("cars")
+      .deleteOne({ _id: carId });
+
+    if (response.deletedCount > 0) {
+      res.status(204).send(); // No content
+    } else {
+      res.setHeader("Content-Type", "application/json");
+      res.status(404).json(
+        response.error || {
+          message: "Car not found or already deleted",
+        }
+      );
+    }
+  } catch (err) {
+    console.error("Error in deleteCar:", err);
+    res.setHeader("Content-Type", "application/json");
+    res.status(500).json({ error: err.message });
   }
 };
-module.exports = { getAll, getSingle, createCar, updateCar, deleteCar };
+
+module.exports = { getAllCars, getSingle, createCar, updateCar, deleteCar };

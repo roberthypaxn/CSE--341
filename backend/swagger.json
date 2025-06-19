@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Contacts API",
-    "description": "Contacts API",
+    "title": "Car Rental API",
+    "description": "Car Rental API",
     "version": "1.0.0"
   },
   "host": "cse-341-1-injs.onrender.com",

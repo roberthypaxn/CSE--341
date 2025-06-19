@@ -3,8 +3,8 @@ const swaggerAutogen = swaggerAuto();
 
 const doc = {
   info: {
-    title: "Contacts API",
-    description: "Contacts API",
+    title: "Car Rental API",
+    description: "Car Rental API",
   },
   host: "cse-341-1-injs.onrender.com",
   schemes: ["https", "http"],

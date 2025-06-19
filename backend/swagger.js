@@ -6,7 +6,7 @@ const doc = {
     title: "Car Rental API",
     description: "Car Rental API",
   },
-  host: "https://cse-341-1-q96r.onrender.com",
+  host: "cse-341-1-q96r.onrender.com",
   schemes: ["https", "http"],
 };
 

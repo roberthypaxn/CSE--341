@@ -5,7 +5,7 @@
     "description": "Car Rental API",
     "version": "1.0.0"
   },
-  "host": "https://cse-341-1-q96r.onrender.com",
+  "host": "cse-341-1-q96r.onrender.com",
   "basePath": "/",
   "schemes": [
     "https",

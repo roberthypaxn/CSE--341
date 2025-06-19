@@ -11,7 +11,7 @@ const initDb = (callback) => {
   }
   MongoClient.connect(process.env.MONGODB_URI)
     .then((client) => {
-      _db = client.db("Web_Services"); // Get the database instance directly
+      _db = client.db("Car_Rental"); // Get the database instance directly
       callback(null, _db);
     })
     .catch((err) => {

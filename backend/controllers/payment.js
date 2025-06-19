@@ -44,7 +44,6 @@ const createPayment = async (req, res) => {
   //#swagger.tags=["Payments"]
   try {
     const payment = {
-      user_id: req.body.user_id, // String: ID of the paying user
       reservationId: req.body.reservationId, // String: Associated reservation
       amount: req.body.amount, // Number: Total amount paid
       method: req.body.method, // String: Payment method (e.g., 'credit_card', 'paypal')
@@ -89,7 +88,6 @@ const updatePayment = async (req, res) => {
     const paymentId = new ObjectId(id);
 
     const payment = {
-      user_id: req.body.user_id, // String: ID of the paying user
       reservationId: req.body.reservationId, // String: Associated reservation
       amount: req.body.amount, // Number: Total amount paid
       method: req.body.method, // String: Payment method (e.g., 'credit_card', 'paypal')

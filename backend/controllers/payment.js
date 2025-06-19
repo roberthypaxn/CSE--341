@@ -47,7 +47,7 @@ const createPayment = async (req, res) => {
       reservationId: req.body.reservationId, // String: Associated reservation
       amount: req.body.amount, // Number: Total amount paid
       method: req.body.method, // String: Payment method (e.g., 'credit_card', 'paypal')
-      status: "pending", // String: Payment status ('pending', 'completed', etc.)
+      status: req.body.status, // String: Payment status ('pending', 'completed', etc.)
       paidAt: req.body.paidAt || null, // Date: When payment was made (if applicable)
       transactionId: req.body.transactionId, // String: Reference ID from payment gateway
     };
@@ -91,7 +91,7 @@ const updatePayment = async (req, res) => {
       reservationId: req.body.reservationId, // String: Associated reservation
       amount: req.body.amount, // Number: Total amount paid
       method: req.body.method, // String: Payment method (e.g., 'credit_card', 'paypal')
-      status: "pending", // String: Payment status ('pending', 'completed', etc.)
+      status: req.body.status, // String: Payment status ('pending', 'completed', etc.)
       paidAt: req.body.paidAt || null, // Date: When payment was made (if applicable)
       transactionId: req.body.transactionId, // String: Reference ID from payment gateway
     };

@@ -43,6 +43,26 @@ const getSingle = async (req, res) => {
 const createUser = async (req, res) => {
   //#swagger.tags=["Users"]
   try {
+    //Manual Validation
+    if (
+      typeof req.user.githubId !== "string" ||
+      req.user.githubId.trim() === "" ||
+      typeof req.user.name !== "string" ||
+      req.user.name.trim() === "" ||
+      typeof req.user.email !== "string" ||
+      req.user.email.trim() === "" ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.user.email) ||
+      (req.user.phoneNumber !== undefined &&
+        typeof req.user.phoneNumber !== "string") ||
+      (req.user.reservations !== undefined &&
+        (!Array.isArray(req.user.reservations) ||
+          !req.user.reservations.every((r) => typeof r === "object"))) ||
+      (req.user.createdAt !== undefined &&
+        isNaN(Date.parse(req.user.createdAt)))
+    ) {
+      return res.status(400).json({ error: "Invalid input for user" });
+    }
+
     const user = {
       githubId: req.user.githubId, // String: GitHub ID (same as in reservation)
       name: req.user.name, // String: User's name
@@ -80,6 +100,25 @@ const updateUser = async (req, res) => {
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid user ID." });
+    }
+    //Manual Validation
+    if (
+      typeof req.user.githubId !== "string" ||
+      req.user.githubId.trim() === "" ||
+      typeof req.user.name !== "string" ||
+      req.user.name.trim() === "" ||
+      typeof req.user.email !== "string" ||
+      req.user.email.trim() === "" ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.user.email) ||
+      (req.user.phoneNumber !== undefined &&
+        typeof req.user.phoneNumber !== "string") ||
+      (req.user.reservations !== undefined &&
+        (!Array.isArray(req.user.reservations) ||
+          !req.user.reservations.every((r) => typeof r === "object"))) ||
+      (req.user.createdAt !== undefined &&
+        isNaN(Date.parse(req.user.createdAt)))
+    ) {
+      return res.status(400).json({ error: "Invalid input for user" });
     }
 
     const userId = new ObjectId(id);

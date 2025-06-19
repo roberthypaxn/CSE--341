@@ -43,6 +43,24 @@ const getSingle = async (req, res) => {
 const createReservation = async (req, res) => {
   //#swagger.tags=["Reservations"]
   try {
+    //Manual Validation
+    if (
+      typeof req.user.githubId !== "string" ||
+      req.user.githubId.trim() === "" ||
+      typeof req.body.carId !== "string" ||
+      req.body.carId.trim() === "" ||
+      isNaN(Date.parse(req.body.startDate)) ||
+      isNaN(Date.parse(req.body.endDate)) ||
+      new Date(req.body.startDate) >= new Date(req.body.endDate) ||
+      typeof req.body.totalCost !== "number" ||
+      req.body.totalCost <= 0 ||
+      typeof req.body.pickupLocation !== "string" ||
+      req.body.pickupLocation.trim() === "" ||
+      typeof req.body.insuranceSelected !== "boolean"
+    ) {
+      return res.status(400).json({ error: "Invalid input for reservation" });
+    }
+
     const reservation = {
       userId: req.user.githubId, // String: GitHub ID from session
       carId: req.body.carId, // String: ID of the rented car
@@ -86,6 +104,23 @@ const updateReservation = async (req, res) => {
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid reservation ID." });
+    }
+    //Manual Validation
+    if (
+      typeof req.user.githubId !== "string" ||
+      req.user.githubId.trim() === "" ||
+      typeof req.body.carId !== "string" ||
+      req.body.carId.trim() === "" ||
+      isNaN(Date.parse(req.body.startDate)) ||
+      isNaN(Date.parse(req.body.endDate)) ||
+      new Date(req.body.startDate) >= new Date(req.body.endDate) ||
+      typeof req.body.totalCost !== "number" ||
+      req.body.totalCost <= 0 ||
+      typeof req.body.pickupLocation !== "string" ||
+      req.body.pickupLocation.trim() === "" ||
+      typeof req.body.insuranceSelected !== "boolean"
+    ) {
+      return res.status(400).json({ error: "Invalid input for reservation" });
     }
 
     const reservationId = new ObjectId(id);

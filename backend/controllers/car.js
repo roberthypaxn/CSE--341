@@ -43,6 +43,26 @@ const getSingle = async (req, res) => {
 const createCar = async (req, res) => {
   //#swagger.tags=["Cars"]
   try {
+    if (
+      typeof req.body.make !== "string" ||
+      req.body.make.trim() === "" ||
+      typeof req.body.model !== "string" ||
+      req.body.model.trim() === "" ||
+      typeof req.body.year !== "number" ||
+      req.body.year < 1900 ||
+      req.body.year > new Date().getFullYear() + 1 ||
+      typeof req.body.color !== "string" ||
+      req.body.color.trim() === "" ||
+      typeof req.body.licensePlate !== "string" ||
+      req.body.licensePlate.trim() === "" ||
+      typeof req.body.mileage !== "number" ||
+      req.body.mileage < 0 ||
+      typeof req.body.location !== "string" ||
+      req.body.location.trim() === ""
+    ) {
+      return res.status(400).json({ error: "Invalid input for car" });
+    }
+
     const car = {
       make: req.body.make, // String: Car manufacturer
       model: req.body.model, // String: Car model
@@ -80,6 +100,27 @@ const updateCar = async (req, res) => {
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid car ID." });
+    }
+
+    //Manual Validation
+    if (
+      typeof req.body.make !== "string" ||
+      req.body.make.trim() === "" ||
+      typeof req.body.model !== "string" ||
+      req.body.model.trim() === "" ||
+      typeof req.body.year !== "number" ||
+      req.body.year < 1900 ||
+      req.body.year > new Date().getFullYear() + 1 ||
+      typeof req.body.color !== "string" ||
+      req.body.color.trim() === "" ||
+      typeof req.body.licensePlate !== "string" ||
+      req.body.licensePlate.trim() === "" ||
+      typeof req.body.mileage !== "number" ||
+      req.body.mileage < 0 ||
+      typeof req.body.location !== "string" ||
+      req.body.location.trim() === ""
+    ) {
+      return res.status(400).json({ error: "Invalid input for car" });
     }
 
     const carId = new ObjectId(id);

@@ -43,6 +43,23 @@ const getSingle = async (req, res) => {
 const createPayment = async (req, res) => {
   //#swagger.tags=["Payments"]
   try {
+    //Manual Validation
+    if (
+      typeof req.user.githubId !== "string" ||
+      req.user.githubId.trim() === "" ||
+      typeof req.body.reservationId !== "string" ||
+      req.body.reservationId.trim() === "" ||
+      typeof req.body.amount !== "number" ||
+      req.body.amount <= 0 ||
+      typeof req.body.method !== "string" ||
+      req.body.method.trim() === "" ||
+      (req.body.paidAt !== undefined && isNaN(Date.parse(req.body.paidAt))) ||
+      typeof req.body.transactionId !== "string" ||
+      req.body.transactionId.trim() === ""
+    ) {
+      return res.status(400).json({ error: "Invalid input for payment" });
+    }
+
     const payment = {
       userId: req.user.githubId, // String: ID of the paying user
       reservationId: req.body.reservationId, // String: Associated reservation
@@ -84,6 +101,23 @@ const updatePayment = async (req, res) => {
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid payment ID." });
+    }
+
+    //Manual Validation
+    if (
+      typeof req.user.githubId !== "string" ||
+      req.user.githubId.trim() === "" ||
+      typeof req.body.reservationId !== "string" ||
+      req.body.reservationId.trim() === "" ||
+      typeof req.body.amount !== "number" ||
+      req.body.amount <= 0 ||
+      typeof req.body.method !== "string" ||
+      req.body.method.trim() === "" ||
+      (req.body.paidAt !== undefined && isNaN(Date.parse(req.body.paidAt))) ||
+      typeof req.body.transactionId !== "string" ||
+      req.body.transactionId.trim() === ""
+    ) {
+      return res.status(400).json({ error: "Invalid input for payment" });
     }
 
     const paymentId = new ObjectId(id);

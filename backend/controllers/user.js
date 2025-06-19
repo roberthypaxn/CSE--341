@@ -44,12 +44,12 @@ const createUser = async (req, res) => {
   //#swagger.tags=["Users"]
   try {
     const user = {
-      githubId: req.user.githubId, // String: GitHub ID (same as in reservation)
-      name: req.user.name, // String: User's name
-      email: req.user.email, // String: User's email address
-      phoneNumber: req.user.phoneNumber, // String: Optional phone number
-      reservations: req.user.reservations, // Array: List of reservations by this user
-      createdAt: req.user.createdAt || new Date(), // Date: Account creation time
+      // String: GitHub ID (same as in reservation)
+      name: req.body.name, // String: User's name
+      email: req.body.email, // String: User's email address
+      phoneNumber: req.body.phoneNumber, // String: Optional phone number
+      reservations: req.body.reservations, // Array: List of reservations by this user
+      createdAt: req.body.createdAt || new Date(), // Date: Account creation time
     };
 
     const response = await mongodb.getDb().collection("users").insertOne(user);
@@ -85,12 +85,11 @@ const updateUser = async (req, res) => {
     const userId = new ObjectId(id);
 
     const user = {
-      githubId: req.user.githubId, // String: GitHub ID (same as in reservation)
-      name: req.user.name, // String: User's name
-      email: req.user.email, // String: User's email address
-      phoneNumber: req.user.phoneNumber, // String: Optional phone number
-      reservations: req.user.reservations, // Array: List of reservations by this user
-      createdAt: req.user.createdAt || new Date(), // Date: Account creation time
+      name: req.body.name, // String: User's name
+      email: req.body.email, // String: User's email address
+      phoneNumber: req.body.phoneNumber, // String: Optional phone number
+      reservations: req.body.reservations, // Array: List of reservations by this user
+      createdAt: req.body.createdAt || new Date(), // Date: Account creation time
     };
 
     const response = await mongodb

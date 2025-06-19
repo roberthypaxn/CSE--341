@@ -44,7 +44,7 @@ const createReservation = async (req, res) => {
   //#swagger.tags=["Reservations"]
   try {
     const reservation = {
-      userId: req.user.githubId, // String: GitHub ID from session
+      user_id: req.body.user_id, // String: GitHub ID from session
       carId: req.body.carId, // String: ID of the rented car
       startDate: req.body.startDate, // Date: Rental start date
       endDate: req.body.endDate, // Date: Rental end date
@@ -91,7 +91,7 @@ const updateReservation = async (req, res) => {
     const reservationId = new ObjectId(id);
 
     const reservation = {
-      userId: req.user.githubId, // String: GitHub ID from session
+      user_id: req.body.user_id, // String: GitHub ID from session
       carId: req.body.carId, // String: ID of the rented car
       startDate: req.body.startDate, // Date: Rental start date
       endDate: req.body.endDate, // Date: Rental end date

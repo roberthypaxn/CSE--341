@@ -14,6 +14,7 @@ const getAllCars = async (req, res) => {
 };
 
 const getSingle = async (req, res) => {
+  //#swagger.tags=["Cars"]
   try {
     const id = req.params.id;
     if (!ObjectId.isValid(id)) {

@@ -98,6 +98,9 @@
     },
     "/cars/{id}": {
       "get": {
+        "tags": [
+          "Cars"
+        ],
         "description": "",
         "produces": [
           "application/json"

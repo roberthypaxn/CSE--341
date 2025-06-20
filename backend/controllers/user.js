@@ -21,7 +21,6 @@ const getSingle = async (req, res) => {
     const id = req.params.id;
 
     if (!ObjectId.isValid(id)) {
-      console.log("getSingle() ran!");
       return res.status(400).json({ message: "Invalid user ID." });
     }
     const userId = new ObjectId(id);
